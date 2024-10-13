@@ -1,6 +1,6 @@
 name: simple_locale
 description: "A package for easily getting and switching locale information. It is designed to coexist with Flutter's standard multilingual methods."
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/MasahideMori-SimpleAppli/simple_locale
 
 environment:

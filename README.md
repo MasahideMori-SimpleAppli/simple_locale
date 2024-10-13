@@ -1,4 +1,4 @@
-# file_state_manager
+# simple_locale
 
 (en)Japanese ver is [here](https://github.com/MasahideMori-SimpleAppli/simple_locale/blob/main/README_JA.md).  
 (ja)この解説の日本語版は[ここ](https://github.com/MasahideMori-SimpleAppli/simple_locale/blob/main/README_JA.md)にあります。
