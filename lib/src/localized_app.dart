@@ -11,7 +11,6 @@ import 'locale_manager.dart';
 class LocalizedApp extends StatefulWidget {
   final List<Locale> supportedLocales;
   final Locale? defLocale;
-  final Locale fallbackLocale;
   final Widget child;
 
   /// (en)Initializes the locale settings.
@@ -27,16 +26,16 @@ class LocalizedApp extends StatefulWidget {
   /// defLocaleの設定がある場合はdefLocaleを最優先にした計算が実行されます。
   ///
   /// * [supportedLocales] : An array of app supported locales.
+  /// If no locale is available, the first locale in this set will be used
+  /// as a fallback locale.
   /// * [defLocale] : The default locale. If this locale is not null,
   /// and the device supports it, this locale will be forced,
   /// ignoring the device locale.
-  /// * [fallbackLocale] : The locale used when the app does not support
-  /// the device's locale.
+  /// This locale must be an element of supportedLocales.
   /// * [child] : The child widget. e.g. MaterialApp.
   const LocalizedApp(
       {required this.supportedLocales,
       this.defLocale,
-      this.fallbackLocale = const Locale("en"),
       required this.child,
       super.key});
 
@@ -57,20 +56,15 @@ class _LocalizedAppState extends State<LocalizedApp> {
   /// Normally, it is initialized with the device's own locale,
   /// but if the device locale is not included in allowedLocales,
   /// fallbackLocale will be set.
-  /// If defLocale is set, calculations will be performed with defLocale
-  /// as the top priority.
+  /// If defLocale is not null, it will be set.
   ///
   /// (ja) ロケール設定を初期化します。
   /// 通常はデバイスロケールで初期化されますが、
   /// allowedLocalesにデバイスロケールが含まれない場合はfallbackLocaleが設定されます。
-  /// defLocaleの設定がある場合はdefLocaleを最優先にした計算が実行されます。
+  /// defLocaleの設定がある場合はdefLocaleが設定されます。
   void _initLocale() {
     if (widget.defLocale != null) {
-      if (widget.supportedLocales.contains(widget.defLocale!)) {
-        _localeNotifier = ValueNotifier(widget.defLocale!);
-      } else {
-        _setDeviceLocale();
-      }
+      _localeNotifier = ValueNotifier(widget.defLocale!);
     } else {
       _setDeviceLocale();
     }
@@ -84,7 +78,7 @@ class _LocalizedAppState extends State<LocalizedApp> {
     if (widget.supportedLocales.contains(deviceLocale)) {
       _localeNotifier = ValueNotifier(deviceLocale);
     } else {
-      _localeNotifier = ValueNotifier(widget.fallbackLocale);
+      _localeNotifier = ValueNotifier(widget.supportedLocales.first);
     }
   }
 
@@ -104,7 +98,6 @@ class _LocalizedAppState extends State<LocalizedApp> {
             localeNotifier: _localeNotifier,
             supportedLocales: widget.supportedLocales,
             defLocale: widget.defLocale,
-            fallbackLocale: widget.fallbackLocale,
             child: widget.child);
       },
     );
